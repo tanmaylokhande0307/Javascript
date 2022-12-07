@@ -1,9 +1,6 @@
-function setupCounter( value ){
-    return function counter(){
-        return value++;
-    }
+let sum =  (num1,num2) => {
+    return num1+num2;
 }
 
-let counter1 = setupCounter(0);
-console.log(counter1());
-console.log(counter1());
+let output = sum(4,3);
+console.log(output)
