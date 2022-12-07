@@ -21,4 +21,5 @@ tan.fullName = "lokhande tanmay"
 
 const head = document.getElementById("display");
 
-head.innerHTML = tan.fullName;
+head.innerHTML = tan;
+console.log(tan._proto_)
