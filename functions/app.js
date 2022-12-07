@@ -1,6 +1,6 @@
-let sum =  (num1,num2) => {
-    return num1+num2;
+function hi(){
+    console.log("hi");
+    console.log(this);
 }
 
-let output = sum(4,3);
-console.log(output)
+hi();
