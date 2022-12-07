@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 let message =  {
     name:"John",
     regularFunction: function (){
@@ -12,3 +13,11 @@ let message =  {
 
 message.regularFunction();
 message.arrowFunction();
+
+function hi(){
+    console.log("hi");
+    console.log(this);
+}
+
+hi();
+ 
