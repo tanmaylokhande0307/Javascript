@@ -1,6 +1,14 @@
-let sum =  (num1,num2) => {
-    return num1+num2;
+let message =  {
+    name:"John",
+    regularFunction: function (){
+        console.log(this);
+        console.log('Hello '+ this.name);
+    },
+    arrowFunction: () => {
+        console.log(this)
+        console.log("Hii " + this.name);
+    }
 }
 
-let output = sum(4,3);
-console.log(output)
+message.regularFunction();
+message.arrowFunction();
