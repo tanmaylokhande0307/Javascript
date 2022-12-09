@@ -12,12 +12,21 @@
 
 
 for(var i = 0; i< 3; i++) {
-    {
-        var c = 0;
-        
+   function print(c){
         setTimeout(() => {
-            console.log(c++);
+            console.log(c);
         },i*1000)
-    }
+   }
+   print(i);
 }
 
+
+// function counter(){
+//     var count = 0;
+    
+//     function incCount(){
+//         count++;
+//     }
+// }
+
+// console.log(count);
