@@ -15,7 +15,7 @@ class Person {
     }
 }
 
-let tan = new Person("Tanmay","Lokhande");
+let tan = new Person("Josh","buttler");
 
 tan.fullName = "lokhande tanmay"
 
