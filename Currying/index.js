@@ -14,7 +14,29 @@ const operationMapping = {
 };
 
 const evaluate = (operation) => (x) => (y) => {
-    return operationMapping[operation](x,y)
+  return operationMapping[operation](x, y);
 };
 
-console.log(evaluate("sum")(1)(2));
+// console.log(evaluate("sum")(1)(2));
+
+const infiniteSum = (a) => {
+  return (b) => {
+    if (b) return infiniteSum(a + b);
+    else return a;
+  };
+};
+
+function infiniteSum1(...args) {
+  const sum = args.reduce((a, b) => a + b, 0);
+
+  const adder = (...nextArgs) => {
+    if (nextArgs.length === 0) {
+      return sum;
+    }
+    return infiniteSum1(sum, ...nextArgs);
+  };
+
+  return adder;
+}
+
+console.log(infiniteSum1(5)(23)(12)());
