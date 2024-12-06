@@ -1,7 +1,3 @@
-function f(a){
-    return function (b){
-        console.log(a,b)
-    }
-}
+const f = (a) => (b) => console.log(a,b)
 
-console.log(f(2))
+console.log(f(2)(3))
