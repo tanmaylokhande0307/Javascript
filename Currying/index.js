@@ -43,11 +43,11 @@ const newSum = (a, b, c) => a + b + c;
 
 const curry = (fn) => {
   return (curriedFunction = (...args) => {
-      if (args.length >= fn.length) {
-          return fn(...args);
-        } else {
-            return (...nextArgs) => {
-          console.log(nextArgs);
+    if (args.length >= fn.length) {
+      return fn(...args);
+    } else {
+      return (...nextArgs) => {
+        console.log(nextArgs);
         return curriedFunction(...args, ...nextArgs);
       };
     }
@@ -56,4 +56,39 @@ const curry = (fn) => {
 
 const totalSum = curry(newSum);
 
-console.log(totalSum(5)(23)(28));
+// console.log(totalSum(5)(23)(28));
+
+function curry1(func) {
+  return function curried(...args) {
+    const sanitizedArgs = args.slice(0, func.length);
+
+    const hasPlaceholder = sanitizedArgs.some(
+      (arg) => arg == curry1.placeholder
+    );
+
+    if (!hasPlaceholder && sanitizedArgs.length == func.length) {
+      return func.apply(this, sanitizedArgs);
+    }
+
+    return function next(...nextArgs) {
+      return curried.apply(this, mergeArgs(sanitizedArgs, nextArgs));
+    };
+  };
+}
+
+function mergeArgs(args, nextArgs) {
+  let result = [];
+
+  args.forEach((arg, idx) => {
+    if (arg == curry1.placeholder) {
+      result.push(nextArgs.shift());
+    } else {
+      result.push(arg);
+    }
+  });
+
+  return [...result, ...nextArgs];
+}
+
+curry1.placeholder = Symbol();
+console.log(curry1.placeholder)
