@@ -39,4 +39,21 @@ function infiniteSum1(...args) {
   return adder;
 }
 
-console.log(infiniteSum1(5)(23)(12)());
+const newSum = (a, b, c) => a + b + c;
+
+const curry = (fn) => {
+  return (curriedFunction = (...args) => {
+      if (args.length >= fn.length) {
+          return fn(...args);
+        } else {
+            return (...nextArgs) => {
+          console.log(nextArgs);
+        return curriedFunction(...args, ...nextArgs);
+      };
+    }
+  });
+};
+
+const totalSum = curry(newSum);
+
+console.log(totalSum(5)(23)(28));
