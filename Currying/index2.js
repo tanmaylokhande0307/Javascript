@@ -18,10 +18,10 @@ function sum(a, b, c) {
   return a + b + c;
 }
 
-// const curriedJoin = curry(join);
-// console.log(curriedJoin(1, 2, 3));
-// console.log(curriedJoin(1)(2, 3));
-// console.log(curriedJoin(1, 2)(3));
+// const curriedJoin = curry(join);   
+// console.log(curriedJoin(1, 2, 3)); 
+// console.log(curriedJoin(1)(2, 3)); 
+// console.log(curriedJoin(1, 2)(3)); 
 
 const infiniteSum = (...args) => {
   const sum = args.reduce((a, b) => a + b, 0);
