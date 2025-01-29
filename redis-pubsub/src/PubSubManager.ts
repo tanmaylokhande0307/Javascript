@@ -1,4 +1,5 @@
 import { createClient, RedisClientType } from "redis";
+import { redisClient } from "./RedisClientManager";
 
 export class PubSubManager {
   private static instance: PubSubManager;
@@ -6,8 +7,7 @@ export class PubSubManager {
   private subscriptions: Map<string, string[]>;
 
   private constructor() {
-    this.redisClient = createClient();
-    this.redisClient.connect();
+    this.redisClient = redisClient.getClient();
     this.subscriptions = new Map();
   }
 
