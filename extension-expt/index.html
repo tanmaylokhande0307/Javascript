@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rectangle Selection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        #content {
+            width: 100%;
+            height: 500px;
+            overflow: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            position: relative;
+        }
+        .selection-box {
+            position: absolute;
+            border: 2px dashed red;
+            background: rgba(255, 0, 0, 0.2);
+            display: none;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <button id="startSelection">Draw Selection</button>
+    <div id="content">
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
+        <p>More content here...</p>
+        <p>Even more content...</p>
+    </div>
+    <script>
+        let startX, startY, endX, endY;
+        let selectionBox;
+        let isSelecting = false;
+
+        document.getElementById("startSelection").addEventListener("click", () => {
+            isSelecting = true;
+            selectionBox = document.createElement("div");
+            selectionBox.classList.add("selection-box");
+            document.getElementById("content").appendChild(selectionBox);
+        });
+
+        document.getElementById("content").addEventListener("mousedown", (e) => {
+            if (!isSelecting) return;
+            startX = e.clientX;
+            startY = e.clientY;
+            selectionBox.style.left = `${startX}px`;
+            selectionBox.style.top = `${startY}px`;
+            selectionBox.style.width = "0px";
+            selectionBox.style.height = "0px";
+            selectionBox.style.display = "block";
+        });
+
+        document.getElementById("content").addEventListener("mousemove", (e) => {
+            if (!isSelecting || e.buttons !== 1) return;
+            console.log(e.clientX,e.clientY)
+            endX = e.clientX;
+            endY = e.clientY;
+            selectionBox.style.width = `${Math.abs(endX - startX)}px`;
+            selectionBox.style.height = `${Math.abs(endY - startY)}px`;
+            selectionBox.style.left = `${Math.min(startX, endX)}px`;
+            selectionBox.style.top = `${Math.min(startY, endY)}px`;
+        });
+
+        document.getElementById("content").addEventListener("mouseup", () => {
+            if (!isSelecting) return;
+            isSelecting = false;
+            console.log(startX, startY, endX, endY)
+            const selectedText = getTextWithinSelection(startX, startY, endX, endY);
+            alert("Selected Text: " + selectedText);
+            selectionBox.remove();
+        });
+
+        function getTextWithinSelection(x1, y1, x2, y2) {
+            const elements = document.elementsFromPoint((x1 + x2) / 2, (y1 + y2) / 2);
+            return elements.map(el => el.innerText).join("\n").trim();
+        }
+    </script>
+</body>
+</html>
