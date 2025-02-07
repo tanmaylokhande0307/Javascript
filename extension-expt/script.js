@@ -1,99 +1,93 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const content = document.getElementById('content');
-    const canvas = document.getElementById('selection-canvas');
+document.addEventListener('DOMContentLoaded', () => {
+    const canvas = document.getElementById('selectionCanvas');
     const ctx = canvas.getContext('2d');
+    const content = document.getElementById('content');
+    const initSelectionButton = document.getElementById('initSelection');
+    const getContentButton = document.getElementById('getContent');
 
-    // Set canvas size to match the window dimensions
-    function resizeCanvas() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    }
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
+    let isDrawing = false;
+    let isResizing = false;
+    let isDragging = false;
+    let rect = { x: 100, y: 100, width: 200, height: 150 }; // Default rectangle
+    let dragStartX, dragStartY, rectStartX, rectStartY;
 
-    let isSelecting = false;
-    let startX, startY, endX, endY;
-
-    content.addEventListener('mousedown', function (e) {
-        isSelecting = true;
-        startX = e.clientX;
-        startY = e.clientY;
-        endX = startX;
-        endY = startY;
-        drawSelectionBox();
-    });
-
-    content.addEventListener('mousemove', function (e) {
-        if (isSelecting) {
-            endX = e.clientX;
-            endY = e.clientY;
-            drawSelectionBox();
-        }
-    });
-
-    content.addEventListener('mouseup', function () {
-        isSelecting = false;
-        clearSelectionBox();
-
-        // Get the bounding box of the selection
-        const rect = {
-            left: Math.min(startX, endX),
-            top: Math.min(startY, endY),
-            right: Math.max(startX, endX),
-            bottom: Math.max(startY, endY),
-        };
-
-        // Extract and log the selected content
-        const selectedElements = getElementsWithinSelection(rect);
-        console.log('Selected Content:');
-        selectedElements.forEach(element => {
-            console.log(element.textContent.trim());
-        });
-    });
-
-    function drawSelectionBox() {
-        // Clear the canvas
+    // Set canvas size to match the window size
+    // Draw the rectangle
+    function drawRectangle() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        // Draw the selection box
-        ctx.strokeStyle = 'blue'; // Border color
-        ctx.lineWidth = 2; // Border width
-        ctx.setLineDash([5, 5]); // Dashed border
-        ctx.fillStyle = 'rgba(0, 0, 255, 0.2)'; // Background color with transparency
-        ctx.fillRect(
-            Math.min(startX, endX),
-            Math.min(startY, endY),
-            Math.abs(endX - startX),
-            Math.abs(endY - startY)
-        );
-        ctx.strokeRect(
-            Math.min(startX, endX),
-            Math.min(startY, endY),
-            Math.abs(endX - startX),
-            Math.abs(endY - startY)
-        );
+        ctx.strokeStyle = '#000';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([5, 5]);
+        ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
     }
 
-    function clearSelectionBox() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-    }
+    // Initialize the default rectangle
+    initSelectionButton.addEventListener('click', () => {
+        drawRectangle();
+    });
 
-    function getElementsWithinSelection(rect) {
+    // Get content within the rectangle
+    getContentButton.addEventListener('click', () => {
         const elements = content.querySelectorAll('*');
-        const selectedElements = [];
+        const selectedContent = [];
 
         elements.forEach(element => {
             const elementRect = element.getBoundingClientRect();
-            if (
-                elementRect.left < rect.right &&
-                elementRect.right > rect.left &&
-                elementRect.top < rect.bottom &&
-                elementRect.bottom > rect.top
-            ) {
-                selectedElements.push(element);
+            if (elementRect.left < rect.x + rect.width &&
+                elementRect.right > rect.x &&
+                elementRect.top < rect.y + rect.height &&
+                elementRect.bottom > rect.y) {
+                selectedContent.push(element.textContent || element.src);
             }
         });
 
-        return selectedElements;
-    }
+        console.log('Selected Content:', selectedContent);
+    });
+
+    // Mouse down event
+    canvas.addEventListener('mousedown', (e) => {
+        const mouseX = e.clientX;
+        const mouseY = e.clientY;
+
+        // Check if the mouse is inside the rectangle
+        if (mouseX >= rect.x && mouseX <= rect.x + rect.width &&
+            mouseY >= rect.y && mouseY <= rect.y + rect.height) {
+            // Check if the mouse is near the edges for resizing
+            const edgeThreshold = 10;
+            if (mouseX <= rect.x + edgeThreshold || mouseX >= rect.x + rect.width - edgeThreshold ||
+                mouseY <= rect.y + edgeThreshold || mouseY >= rect.y + rect.height - edgeThreshold) {
+                isResizing = true;
+            } else {
+                isDragging = true;
+            }
+            dragStartX = mouseX;
+            dragStartY = mouseY;
+            rectStartX = rect.x;
+            rectStartY = rect.y;
+        }
+    });
+
+    // Mouse move event
+    canvas.addEventListener('mousemove', (e) => {
+        const mouseX = e.clientX;
+        const mouseY = e.clientY;
+
+        if (isResizing) {
+            // Resize the rectangle
+            rect.width = Math.max(10, mouseX - rect.x);
+            rect.height = Math.max(10, mouseY - rect.y);
+            drawRectangle();
+        } else if (isDragging) {
+            // Move the rectangle
+            rect.x = rectStartX + (mouseX - dragStartX);
+            rect.y = rectStartY + (mouseY - dragStartY);
+            drawRectangle();
+        }
+    });
+
+    // Mouse up event
+    canvas.addEventListener('mouseup', () => {
+        isResizing = false;
+        isDragging = false;
+    });
 });

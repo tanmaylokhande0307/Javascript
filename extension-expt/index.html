@@ -3,20 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Content Selection with Canvas</title>
+    <title>Selection Box</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div id="content">
-        <p>This is some sample content.</p>
-        <p>You can select any part of this content by drawing a rectangle around it.</p>
-        <p>More content here...</p>
-        <p>Even more content...</p>
+        <p>This is some sample text.</p>
+        <p>Another paragraph of text.</p>
+        <div>More content here...</div>
     </div>
-    <canvas id="selection-canvas"></canvas>
-    <canvas id="myCanvas" width="200" height="100" style="border:1px solid #000000;">
-    </canvas>
-    
+
+    <button id="initSelection">Initialize Selection</button>
+    <button id="getContent">Get Content</button>
+    <canvas id="selectionCanvas"></canvas>
 
     <script src="script.js"></script>
 </body>

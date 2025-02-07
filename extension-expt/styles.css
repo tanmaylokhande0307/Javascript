@@ -1,19 +1,24 @@
 body {
-    font-family: Arial, sans-serif;
     margin: 0;
-    padding: 0;
+    padding: 20px;
+    font-family: Arial, sans-serif;
 }
 
 #content {
-    margin: 20px;
-    line-height: 1.6;
+    margin-top: 20px;
 }
 
-#selection-canvas {
+#selectionCanvas {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none; /* Allow clicks to pass through to the content */
+    pointer-events: none;
+    border: 2px dashed #000;
+}
+
+button {
+    margin: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
 }
