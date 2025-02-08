@@ -1,93 +1,120 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const canvas = document.getElementById('selectionCanvas');
-    const ctx = canvas.getContext('2d');
-    const content = document.getElementById('content');
-    const initSelectionButton = document.getElementById('initSelection');
-    const getContentButton = document.getElementById('getContent');
+const el = document.getElementById("element");
+document
+  .getElementById("startSelection")
+  .addEventListener("click", function () {
+    document.getElementById("element").style.display = "block"; // Show the resizable div
+    let screenWidth = window.innerWidth;
+    let screenHeight = window.innerHeight;
+    let elementWidth = element.offsetWidth;
+    let elementHeight = element.offsetHeight;
 
-    let isDrawing = false;
-    let isResizing = false;
-    let isDragging = false;
-    let rect = { x: 100, y: 100, width: 200, height: 150 }; // Default rectangle
-    let dragStartX, dragStartY, rectStartX, rectStartY;
+    let centerX = (screenWidth - elementWidth) / 2;
+    let centerY = (screenHeight - elementHeight) / 2;
 
-    // Set canvas size to match the window size
-    // Draw the rectangle
-    function drawRectangle() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.strokeStyle = '#000';
-        ctx.lineWidth = 2;
-        ctx.setLineDash([5, 5]);
-        ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
-    }
+    element.style.left = centerX + "px";
+    element.style.top = centerY + "px";
+  });
 
-    // Initialize the default rectangle
-    initSelectionButton.addEventListener('click', () => {
-        drawRectangle();
-    });
+let xPosition = el.getBoundingClientRect().x;
+let yPosition = el.getBoundingClientRect().y;
 
-    // Get content within the rectangle
-    getContentButton.addEventListener('click', () => {
-        const elements = content.querySelectorAll('*');
-        const selectedContent = [];
+interact(".resizable").resizable({
+  allowFrom: ":not(.resize-handle)", // Prevent dragging when interacting with the resize handle
+  edges: { top: false, left: false, bottom: true, right: true },
+  listeners: {
+    move: function (event) {
+      let { x, y } = event.target.dataset;
 
-        elements.forEach(element => {
-            const elementRect = element.getBoundingClientRect();
-            if (elementRect.left < rect.x + rect.width &&
-                elementRect.right > rect.x &&
-                elementRect.top < rect.y + rect.height &&
-                elementRect.bottom > rect.y) {
-                selectedContent.push(element.textContent || element.src);
-            }
-        });
+      x = (parseFloat(xPosition) || 0) - event.deltaRect.left;
+      y = (parseFloat(yPosition) || 0) + event.deltaRect.bottom;
 
-        console.log('Selected Content:', selectedContent);
-    });
+      Object.assign(event.target.style, {
+        width: `${event.rect.width}px`,
+        height: `${event.rect.height}px`,
+        transform: `translate(${x}px, ${y}px)`,
+      });
 
-    // Mouse down event
-    canvas.addEventListener('mousedown', (e) => {
-        const mouseX = e.clientX;
-        const mouseY = e.clientY;
-
-        // Check if the mouse is inside the rectangle
-        if (mouseX >= rect.x && mouseX <= rect.x + rect.width &&
-            mouseY >= rect.y && mouseY <= rect.y + rect.height) {
-            // Check if the mouse is near the edges for resizing
-            const edgeThreshold = 10;
-            if (mouseX <= rect.x + edgeThreshold || mouseX >= rect.x + rect.width - edgeThreshold ||
-                mouseY <= rect.y + edgeThreshold || mouseY >= rect.y + rect.height - edgeThreshold) {
-                isResizing = true;
-            } else {
-                isDragging = true;
-            }
-            dragStartX = mouseX;
-            dragStartY = mouseY;
-            rectStartX = rect.x;
-            rectStartY = rect.y;
-        }
-    });
-
-    // Mouse move event
-    canvas.addEventListener('mousemove', (e) => {
-        const mouseX = e.clientX;
-        const mouseY = e.clientY;
-
-        if (isResizing) {
-            // Resize the rectangle
-            rect.width = Math.max(10, mouseX - rect.x);
-            rect.height = Math.max(10, mouseY - rect.y);
-            drawRectangle();
-        } else if (isDragging) {
-            // Move the rectangle
-            rect.x = rectStartX + (mouseX - dragStartX);
-            rect.y = rectStartY + (mouseY - dragStartY);
-            drawRectangle();
-        }
-    });
-
-    // Mouse up event
-    canvas.addEventListener('mouseup', () => {
-        isResizing = false;
-        isDragging = false;
-    });
+      Object.assign(event.target.dataset, { x, y });
+    },
+  },
 });
+
+interact(".resizable").draggable({
+  listeners: {
+    start(event) {
+      console.log(event.type, event.target);
+    },
+    move(event) {
+      xPosition += event.dx;
+      yPosition += event.dy;
+
+      event.target.style.transform = `translate(${xPosition}px, ${yPosition}px)`;
+    },
+  },
+});
+
+document.getElementById("getContent").addEventListener("click", function () {
+  let selectionBox = document.getElementById("element").getBoundingClientRect();
+  let selectedText = new Set();
+  let points = getSelectionPoints(selectionBox);
+
+  const treeWalker = document.createTreeWalker(
+    document.body, // Using body instead of #root
+    NodeFilter.SHOW_TEXT,
+    {
+      acceptNode: function (node) {
+        let parent = node.parentElement;
+        if (!parent) return NodeFilter.FILTER_REJECT;
+
+        let rect = parent.getBoundingClientRect();
+        if (
+          rect.bottom >= selectionBox.top &&
+          rect.top <= selectionBox.bottom &&
+          rect.right >= selectionBox.left &&
+          rect.left <= selectionBox.right
+        ) {
+          return NodeFilter.FILTER_ACCEPT;
+        }
+        return NodeFilter.FILTER_REJECT;
+      },
+    },
+    false
+  );
+
+  while (treeWalker.nextNode()) {
+    selectedText.add(treeWalker.currentNode.nodeValue.trim());
+  }
+  console.log("Selected Content:\n\n" + Array.from(selectedText).join("\n"));
+});
+
+function getSelectionPoints(box) {
+  return [
+    [box.left + 5, box.top + 5], // Top-left
+    [box.right - 5, box.top + 5], // Top-right
+    [box.left + 5, box.bottom - 5], // Bottom-left
+    [box.right - 5, box.bottom - 5], // Bottom-right
+    [box.left + box.width / 2, box.top + box.height / 2], // Center
+  ];
+}
+
+// Check if the element is fully or partially inside the selection box
+function isInsideSelection(node, selectionBox) {
+  let rect = node.getBoundingClientRect();
+  return !(
+    rect.right < selectionBox.left ||
+    rect.left > selectionBox.right ||
+    rect.bottom < selectionBox.top ||
+    rect.top > selectionBox.bottom
+  );
+}
+
+// Check if an element is visible
+function isElementVisible(node) {
+  let style = window.getComputedStyle(node);
+  return (
+    style.display !== "none" &&
+    style.visibility !== "hidden" &&
+    style.opacity !== "0" &&
+    node.offsetParent !== null
+  );
+}

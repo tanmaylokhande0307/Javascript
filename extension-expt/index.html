@@ -1,22 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Selection Box</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+  </head>
+  <body>
+    <button id="startSelection">Start Selection</button>
+    <button id="getContent">Get Content</button>
     <div id="content">
-        <p>This is some sample text.</p>
-        <p>Another paragraph of text.</p>
-        <div>More content here...</div>
+      <h1>Software Engineer</h1>
+      <h2>Reuters</h2>
+      <p><strong>Rating:</strong> 4.05 Reviews</p>
+      <p><strong>Experience:</strong> 3 - 5 years</p>
+      <p><strong>Salary:</strong> Not Disclosed</p>
+      <p><strong>Location:</strong> Mumbai, Hyderabad</p>
+      <p><strong>Posted:</strong> 1 day ago</p>
+      <p><strong>Openings:</strong> 1</p>
+      <p><strong>Applicants:</strong> 41</p>
+      <button>Save</button>
+      <button>Apply on company site</button>
+
+      <h2>Job Highlights</h2>
+      <p>
+        Bachelor’s degree in Computer Science, Information Technology, or a
+        related field, or equivalent practical experience.
+      </p>
+      <p>
+        Work from another location for up to a total of 8 weeks in a year, 4 of
+        those weeks can be out of the country and the remaining in the country.
+      </p>
+      <p>Headspace app subscription</p>
+
+      <h2>Job Description</h2>
+      <p>
+        We are seeking a talented and experienced React Developer to join our
+        dynamic development team. The ideal candidate will have a strong
+        background in front-end development and a proven track record of
+        building efficient, scalable, and user-friendly web applications using
+        React.js.
+      </p>
+
+      <h3>About the Role:</h3>
+      <ul>
+        <li>Develop and maintain web applications using React.js.</li>
+        <li>Collaborate with cross-functional teams.</li>
+        <li>Implement reusable components and front-end libraries.</li>
+        <li>Optimize components for performance.</li>
+        <li>Participate in code reviews and knowledge sharing.</li>
+        <li>Stay updated with industry trends.</li>
+      </ul>
+
+      <h3>About You:</h3>
+      <ul>
+        <li>3-5 years of experience in front-end development with React.js.</li>
+        <li>Proficiency in JavaScript, DOM manipulation, and object model.</li>
+        <li>Strong understanding of React.js core principles.</li>
+        <li>Experience with Redux or Context API.</li>
+        <li>Familiarity with RESTful APIs and async request handling.</li>
+        <li>Knowledge of JSON Web Token for authorization.</li>
+        <li>Experience with front-end tools like Babel, Webpack, and NPM.</li>
+        <li>Understanding of business and technical requirements.</li>
+        <li>Strong problem-solving skills.</li>
+        <li>Experience with Git, Bitbucket, or GitHub.</li>
+        <li>Familiarity with Agile methodologies.</li>
+        <li>Experience with Jest or Mocha testing frameworks.</li>
+      </ul>
+
+      <h2>Benefits</h2>
+      <ul>
+        <li>Hybrid work model (2-3 days in-office per week).</li>
+        <li>Flexible vacation and two Mental Health Days Off.</li>
+        <li>Work from another location for 8 weeks a year.</li>
+        <li>Headspace app subscription.</li>
+        <li>Retirement, savings, and tuition reimbursement.</li>
+        <li>Networking and learning opportunities.</li>
+        <li>Social impact programs.</li>
+        <li>Purpose-driven work.</li>
+      </ul>
+
+      <h2>Role Details</h2>
+      <p><strong>Role:</strong> Software Development - Other</p>
+      <p><strong>Industry Type:</strong> Internet</p>
+      <p><strong>Department:</strong> Engineering - Software & QA</p>
+      <p><strong>Employment Type:</strong> Full Time, Permanent</p>
+      <p><strong>Role Category:</strong> Software Development</p>
+
+      <h2>Education</h2>
+      <p>UG: Any Graduate</p>
+      <p>PG: Any Postgraduate</p>
+
+      <h2>Key Skills</h2>
+      <p>
+        GitHub, Front-end, DOM, GIT, Networking, Diversity and Inclusion,
+        JavaScript, JSON, Information Technology
+      </p>
     </div>
 
-    <button id="initSelection">Initialize Selection</button>
-    <button id="getContent">Get Content</button>
-    <canvas id="selectionCanvas"></canvas>
+    <div class="resizable" id="element">
+    </div>
 
     <script src="script.js"></script>
-</body>
+  </body>
 </html>
