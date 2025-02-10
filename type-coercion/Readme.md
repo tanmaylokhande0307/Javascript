@@ -46,4 +46,14 @@ obj.toString() = '[object object]'
 
 hence obj == 0 // false
 
+#### truthy and falsy
 
+in javascript all values are truthy unless they are defined falsy
+
+falsy : 0,"",-0, 0n,false, undefined, null , NAN
+
+hence, 
+
+if([]){
+    this code will execute
+}
