@@ -22,3 +22,28 @@ Number("") = 0
 
 hence [] == 0, first object is converted to string then string is converted to number in this case
 
+#### case 2
+
+
+{} == 0 // Uncaught SyntaxError: Unexpected token '=='
+
+gives error
+
+{}.toString() gives error
+
+but
+
+const obj = {}
+
+and now 
+
+obj == 0 // false
+
+because,
+obj.toString() = '[object object]'
+
+'[object object]' == 0 // false
+
+hence obj == 0 // false
+
+
