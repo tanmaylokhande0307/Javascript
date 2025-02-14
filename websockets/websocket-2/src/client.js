@@ -1,7 +1,8 @@
-const Websocket = require("ws");
+import WebSocket from "ws";
 
-const ws = new Websocket("ws://localhost:8080");
+const ws = new WebSocket("ws://localhost:8080");
 
 ws.on("open", () => {
-  ws.send("array");
+  const data = { type: "greeting", message: "Hello, server!" };
+  ws.send(JSON.stringify(data));
 });
