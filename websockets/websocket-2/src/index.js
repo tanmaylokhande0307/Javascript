@@ -1,7 +1,10 @@
 import { WebSocketServer } from "ws";
 import WebSocket from "ws";
+import http from "http"
 
-const wss = new WebSocketServer({ port: 8080 });
+const server = http.createServer((req,res)=>{})
+
+const wss = new WebSocketServer({ server });
 
 wss.on("connection", (ws) => {
   ws.on("message", (data) => {
@@ -11,3 +14,8 @@ wss.on("connection", (ws) => {
 
   console.log("connected");
 });
+
+
+server.listen(8080,()=>{
+    console.log("server is listening on port 8080 ")
+})
