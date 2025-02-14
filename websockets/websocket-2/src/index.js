@@ -14,8 +14,11 @@ const wss = new WebSocketServer({ server: httpserver });
 
 wss.on("connection", (ws) => {
   ws.on("message", (data) => {
-    const res = data;
-    console.log(JSON.parse(res.toString()));
+    wss.clients.forEach((client) => {
+      const res = data;
+      console.log(JSON.parse(res.toString()));
+      client.send(JSON.stringify({message:"message received"}))
+    });
   });
 
   console.log("connected");
